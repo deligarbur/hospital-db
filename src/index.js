@@ -40,4 +40,32 @@ app.get('/doctor/:specialty/:price', async (req, res) => {
 	}
 });
 
+// especialidad ginecología o el nombre sea Ana
+app.get('/doctor/:specialty/:name', async (req, res) => {
+	try {
+		const { specialty, name } = req.params;
+		const query = await Doctor.find({
+			$or: [{ specialty: { $eq: 'ginecología' } }, { name: { $eq: 'Ana' } }],
+		});
+		res.json(query);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send('Error al obtener la lista de doctores');
+	}
+});
+
+// precio de consulta esté entre 120 y 150
+app.get('/doctor/:price', async (req, res) => {
+	try {
+		const { specialty, price } = req.params;
+		const query = await Doctor.find({
+			price: { $gte: 120, $lte: 150 },
+		});
+		res.json(query);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send('Error al obtener la lista de doctores');
+	}
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
